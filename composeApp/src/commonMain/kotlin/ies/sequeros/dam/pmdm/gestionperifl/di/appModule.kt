@@ -1,5 +1,9 @@
 package ies.sequeros.dam.pmdm.gestionperifl.di
 
+import ies.sequeros.dam.pmdm.gestionperifl.application.auth.LoginUseCase
+import ies.sequeros.dam.pmdm.gestionperifl.infraestructure.auth.SettingsTokenStorage
+import ies.sequeros.dam.pmdm.gestionperifl.infraestructure.auth.TokenStorage
+import ies.sequeros.dam.pmdm.gestionperifl.infraestructure.ktor.AuthApi
 import ies.sequeros.dam.pmdm.gestionperifl.infraestructure.ktor.createHttpClient
 import ies.sequeros.dam.pmdm.gestionperifl.ui.appsettings.AppSettings
 import ies.sequeros.dam.pmdm.gestionperifl.ui.appsettings.AppViewModel
@@ -9,15 +13,22 @@ import org.koin.dsl.module
 
 
 val appModulo = module {
+    val baseUrl = "http://localhost:8080"
 
     /**
      * infraestructura
      */
+    single<TokenStorage> {
+        SettingsTokenStorage(get())
+    }
     single {
-        createHttpClient( //get(),
-            "http://localhost:8080/api/public/refresh"
+        createHttpClient(
+            get(),
+            "$baseUrl/api/public/refresh"
         )
     }
+    single { AuthApi(get(), baseUrl) }
+    single { LoginUseCase(get(), get()) }
     //almacenamiento del token
     //repositorios
     /**
@@ -32,6 +43,6 @@ val appModulo = module {
      **/
     single { AppSettings() }
     viewModel { AppViewModel(get()) }
-    viewModel { LoginFormViewModel() }
+    viewModel { LoginFormViewModel(get()) }
 
 }

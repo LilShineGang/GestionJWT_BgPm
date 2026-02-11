@@ -1,27 +1,30 @@
 package ies.sequeros.dam.pmdm.gestionperifl.infraestructure.ktor
-import io.ktor.client.HttpClient
 
+import ies.sequeros.dam.pmdm.gestionperifl.infraestructure.auth.TokenStorage
+import io.ktor.client.HttpClient
+import io.ktor.client.call.body
 import io.ktor.client.plugins.DefaultRequest
 import io.ktor.client.plugins.HttpTimeout
 import io.ktor.client.plugins.auth.Auth
-
+import io.ktor.client.plugins.auth.providers.BearerTokens
 import io.ktor.client.plugins.auth.providers.bearer
 import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
-
 import io.ktor.client.plugins.logging.LogLevel
 import io.ktor.client.plugins.logging.Logger
 import io.ktor.client.plugins.logging.Logging
 import io.ktor.client.request.header
-
+import io.ktor.client.request.post
+import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
-
 import io.ktor.http.encodedPath
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
-fun createHttpClient(//tokenStorage: TokenStorage,
-                     refreshUrl:String): HttpClient {
+fun createHttpClient(
+    tokenStorage: TokenStorage,
+    refreshUrl: String,
+): HttpClient {
     return HttpClient { // Puedes usar HttpClient(CIO), HttpClient(Darwin), etc.
         install(DefaultRequest) {
             header(HttpHeaders.ContentType, ContentType.Application.Json)
@@ -50,15 +53,37 @@ fun createHttpClient(//tokenStorage: TokenStorage,
                     request.url.encodedPath.startsWith("/api/users/")
                 }
                 loadTokens {
-                    // Ktor llama a esto automáticamente en cada petición
-                    //obtener los tokens y si existen añadirlo
-                     //   BearerTokens(accessToken, refreshToken ?: "")
-                    null
+                    val accessToken = tokenStorage.getAccessToken()
+                    val refreshToken = tokenStorage.getRefreshToken()
+                    if (accessToken.isNullOrBlank()) {
+                        null
+                    } else {
+                        BearerTokens(accessToken, refreshToken.orEmpty())
+                    }
                 }
 
                 // configurar el refresco
                 refreshTokens {
-                   null
+                    val refreshToken = tokenStorage.getRefreshToken()
+                    if (refreshToken.isNullOrBlank()) {
+                        return@refreshTokens null
+                    }
+
+                    val newTokens = try {
+                        client.post(refreshUrl) {
+                            markAsRefreshTokenRequest()
+                            setBody(RefreshRequest(refreshToken))
+                        }.body<AuthTokensResponse>()
+                    } catch (ex: Exception) {
+                        tokenStorage.clear()
+                        return@refreshTokens null
+                    }
+
+                    tokenStorage.saveTokens(
+                        newTokens.access_token,
+                        newTokens.refresh_token,
+                    )
+                    BearerTokens(newTokens.access_token, newTokens.refresh_token)
                 }
             }
         }
