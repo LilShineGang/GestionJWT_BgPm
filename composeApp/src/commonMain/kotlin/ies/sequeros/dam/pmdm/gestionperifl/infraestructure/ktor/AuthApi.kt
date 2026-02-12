@@ -5,6 +5,8 @@ import io.ktor.client.call.body
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsText
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
 import io.ktor.http.isSuccess
 
 class AuthApi(
@@ -22,5 +24,19 @@ class AuthApi(
         }
 
         return response.body()
+    }
+
+    suspend fun register(datos: RegisterRequest): Boolean {
+        try {
+            val response = client.post("/api/public/register") {
+                contentType(ContentType.Application.Json)
+                setBody(datos)
+            }
+            return response.status.value in 200..299
+        } catch (e: Exception) {
+            println("Error al registrar usuario: ${e.message}")
+            e.printStackTrace()
+            return false
+        }
     }
 }

@@ -21,3 +21,10 @@ data class AuthTokensResponse(
     val token_type: String? = null,
     val refresh_token: String,
 )
+
+@Serializable
+data class RegisterRequest(
+    val username: String,
+    val email: String,
+    val password: String
+)

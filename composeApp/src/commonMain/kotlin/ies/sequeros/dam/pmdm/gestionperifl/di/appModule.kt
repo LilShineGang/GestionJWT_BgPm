@@ -8,6 +8,7 @@ import ies.sequeros.dam.pmdm.gestionperifl.infraestructure.ktor.createHttpClient
 import ies.sequeros.dam.pmdm.gestionperifl.ui.appsettings.AppSettings
 import ies.sequeros.dam.pmdm.gestionperifl.ui.appsettings.AppViewModel
 import ies.sequeros.dam.pmdm.gestionperifl.ui.login.LoginFormViewModel
+import ies.sequeros.dam.pmdm.gestionperifl.ui.register.RegisterFormViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
@@ -44,5 +45,6 @@ val appModulo = module {
     single { AppSettings() }
     viewModel { AppViewModel(get()) }
     viewModel { LoginFormViewModel(get()) }
+    viewModel { RegisterFormViewModel (get()) }
 
 }
