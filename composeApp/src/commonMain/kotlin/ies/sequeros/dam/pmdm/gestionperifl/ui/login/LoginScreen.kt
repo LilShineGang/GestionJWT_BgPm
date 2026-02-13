@@ -20,10 +20,14 @@ fun LoginScreen(
     val viewModel = koinViewModel<LoginFormViewModel>()
     //estado del formulario que es el del LoginComponent
     val state by viewModel.state.collectAsState()
+    LaunchedEffect(Unit) {
+        viewModel.resetForm()
+    }
     //cuando el estado pasa a ser correcto, se avisa al padre
     LaunchedEffect(state.isLoginSuccess) {
         if (state.isLoginSuccess) {
             onLogin()
+            viewModel.consumeLoginSuccess()
         }
     }
 
