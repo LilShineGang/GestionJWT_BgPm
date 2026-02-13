@@ -80,4 +80,13 @@ class LoginFormViewModel(
             }
         }
     }
+
+    fun resetForm() {
+        _state.value = LoginState()
+        isFormValid.value = false
+    }
+
+    fun consumeLoginSuccess() {
+        _state.update { it.copy(isLoginSuccess = false) }
+    }
 }

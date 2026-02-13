@@ -42,4 +42,17 @@ class AuthApi(
             return false
         }
     }
+
+    suspend fun refresh(refreshToken: String): AuthTokensResponse {
+        val response = client.post("$baseUrl/api/public/refresh") {
+            setBody(RefreshRequest(refresh_token = refreshToken))
+        }
+
+        if (!response.status.isSuccess()) {
+            val errorBody = response.bodyAsText()
+            throw IllegalStateException("Refresh failed: ${response.status.value} ${response.status.description}. $errorBody")
+        }
+
+        return response.body()
+    }
 }
