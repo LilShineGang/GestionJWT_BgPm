@@ -2,6 +2,7 @@ package ies.sequeros.dam.pmdm.gestionperifl.infraestructure.ktor
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.request.delete
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsText
@@ -54,5 +55,19 @@ class AuthApi(
         }
 
         return response.body()
+    }
+
+    suspend fun deleteUser(deleteCommand: DeleteCommand): Boolean {
+        try {
+            val response = client.delete("$baseUrl/api/users/me") {
+                contentType(ContentType.Application.Json)
+                setBody(deleteCommand)
+            }
+            return response.status.value in 200..299
+        } catch (e: Exception) {
+            println("Error al borrar usuario: ${e.message}")
+            e.printStackTrace()
+            return false
+        }
     }
 }
