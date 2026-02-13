@@ -25,7 +25,7 @@ class RegisterFormViewModel(
     var errorMessage by mutableStateOf<String?>(null)
     var isRegisterSuccess by mutableStateOf(false)
 
-    fun onRegisterClick() {
+    fun onRegister() {
         errorMessage = null // errores --
 
         //validaciones

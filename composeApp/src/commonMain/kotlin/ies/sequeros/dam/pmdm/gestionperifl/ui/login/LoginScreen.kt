@@ -10,8 +10,9 @@ import ies.sequeros.dam.pmdm.gestionperifl.ui.components.login.LoginComponent
 
 @Composable
 fun LoginScreen(
+    onNavigateToRegister: () -> Unit,
     onLogin: () -> Unit,
-    onCancel: () -> Unit,
+    onCancel: () -> Unit
 ) {
     val viewModel = koinViewModel<LoginFormViewModel>()
     //estado del formulario que es el del LoginComponent

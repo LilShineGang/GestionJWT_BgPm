@@ -22,20 +22,17 @@ import ies.sequeros.dam.pmdm.gestionperifl.ui.appsettings.AppViewModel
 import ies.sequeros.dam.pmdm.gestionperifl.ui.login.LoginScreen
 import org.koin.compose.viewmodel.koinViewModel
 
+import ies.sequeros.dam.pmdm.gestionperifl.ui.register.RegisterScreen
+
 @Composable
 @Preview
 fun App() {
-    val appViewModel: AppViewModel = koinViewModel()
-    AppTheme(appViewModel.isDarkMode.collectAsState()) {
+    MaterialTheme {
 
-        Column(
-            modifier = Modifier
-                .background(MaterialTheme.colorScheme.primaryContainer)
-                .safeContentPadding()
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            LoginScreen({},{})
-        }
+        RegisterScreen(
+            onNavigateToLogin = {
+                println("Registro ok, ir al login")
+            }
+        )
     }
 }

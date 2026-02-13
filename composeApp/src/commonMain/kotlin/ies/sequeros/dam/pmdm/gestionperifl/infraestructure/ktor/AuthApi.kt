@@ -28,7 +28,7 @@ class AuthApi(
 
     suspend fun register(datos: RegisterRequest): Boolean {
         try {
-            val response = client.post("/api/public/register") {
+            val response = client.post("$baseUrl/api/public/register") {
                 contentType(ContentType.Application.Json)
                 setBody(datos)
             }
