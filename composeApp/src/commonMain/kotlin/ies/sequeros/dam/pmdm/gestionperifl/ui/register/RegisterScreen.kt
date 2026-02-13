@@ -25,9 +25,10 @@ fun RegisterScreen(
     val viewModel = koinViewModel<RegisterFormViewModel>()
 
     LaunchedEffect(viewModel.isRegisterSuccess) {
-        onNavigateToLogin()
-
-        viewModel.isRegisterSuccess = false
+        if (viewModel.isRegisterSuccess) {
+            onNavigateToLogin()
+            viewModel.isRegisterSuccess = false
+        }
     }
     Column (
         modifier = Modifier.fillMaxSize().padding(16.dp),
@@ -120,4 +121,3 @@ fun RegisterScreen(
         }
     }
 }
-

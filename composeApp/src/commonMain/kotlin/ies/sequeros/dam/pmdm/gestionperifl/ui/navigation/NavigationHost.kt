@@ -21,9 +21,8 @@ fun NavigationHost() {
             onRegister = { currentScreen = Screen.REGISTER },
             onCancel = { currentScreen = Screen.LOGIN }
         )
-        Screen.REGISTER -> RegisterScreen(
-            onRegisterSuccess = { currentScreen = Screen.MAIN },
-            onCancel = { currentScreen = Screen.LOGIN }
+        Screen.REGISTER -> ies.sequeros.dam.pmdm.gestionperifl.ui.register.RegisterScreen(
+            onNavigateToLogin = { currentScreen = Screen.LOGIN }
         )
         Screen.MAIN -> {
             val mainViewModel: MainViewModel = koinViewModel()

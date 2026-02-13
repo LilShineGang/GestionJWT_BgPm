@@ -21,26 +21,27 @@ fun LoginScreen(
     //estado del formulario que es el del LoginComponent
     val state by viewModel.state.collectAsState()
     //cuando el estado pasa a ser correcto, se avisa al padre
-    // Desactivado: login real
-    // LaunchedEffect(state.isLoginSuccess) {
-    //     if (state.isLoginSuccess) {
-    //         onLogin()
-    //     }
-    // }
+    LaunchedEffect(state.isLoginSuccess) {
+        if (state.isLoginSuccess) {
+            onLogin()
+        }
+    }
 
     androidx.compose.foundation.layout.Column {
-        LoginComponent(state,viewModel::onEmailChange,viewModel::onPasswordChange,
+        LoginComponent(
+            state,
+            viewModel::onEmailChange,
+            viewModel::onPasswordChange,
             {
-                // Ir directamente a main (dummy)
-                onLogin()
+                viewModel.login()
             },
             {
                 onCancel()
-            })
-        Spacer(androidx.compose.ui.Modifier.height(16.dp))
-        androidx.compose.material3.Button(onClick = onRegister) {
-            androidx.compose.material3.Text("Ir a registro")
-        }
+            },
+            {
+                onRegister()
+            }
+        )
     }
 
 

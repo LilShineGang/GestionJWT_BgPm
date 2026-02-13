@@ -31,7 +31,8 @@ fun LoginComponent (state: LoginState,
                     onEmailChange: (String) -> Unit,
                     onPasswordChange: (String) -> Unit,
                     onLoginClick: () -> Unit,
-                    onCancel: () -> Unit) {
+                    onCancel: () -> Unit,
+                    onRegister: () -> Unit) {
     Box(
         modifier = Modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
@@ -112,7 +113,11 @@ fun LoginComponent (state: LoginState,
                         },
                         modifier = Modifier.weight(1f),
                         enabled = state.isValid && !state.isLoading,
-                        shape = RoundedCornerShape(8.dp)
+                        shape = RoundedCornerShape(8.dp),
+                        colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.primary,
+                            contentColor = MaterialTheme.colorScheme.onPrimary
+                        )
                     ) {
                         Text("Entrar")
                     }
@@ -124,7 +129,7 @@ fun LoginComponent (state: LoginState,
                     color = MaterialTheme.colorScheme.primary,
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
-                        .clickable { /* Debes pasar onRegister como parámetro */ }
+                        .clickable { onRegister() }
                 )
             }
         }

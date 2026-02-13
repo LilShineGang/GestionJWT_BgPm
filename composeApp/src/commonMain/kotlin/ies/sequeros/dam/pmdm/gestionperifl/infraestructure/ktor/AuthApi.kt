@@ -5,11 +5,10 @@ import io.ktor.client.call.body
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.bodyAsText
-<<<<<<< HEAD
-=======
+
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
->>>>>>> 5ec71a149f3f85a970ccc10e32a96a2ba3ebecfd
+
 import io.ktor.http.isSuccess
 
 class AuthApi(
@@ -28,8 +27,7 @@ class AuthApi(
 
         return response.body()
     }
-<<<<<<< HEAD
-=======
+
 
     suspend fun register(datos: RegisterRequest): Boolean {
         try {
@@ -44,5 +42,4 @@ class AuthApi(
             return false
         }
     }
->>>>>>> 5ec71a149f3f85a970ccc10e32a96a2ba3ebecfd
 }
