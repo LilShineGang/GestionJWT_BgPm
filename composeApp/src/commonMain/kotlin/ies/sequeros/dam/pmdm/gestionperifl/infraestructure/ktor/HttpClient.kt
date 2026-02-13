@@ -82,6 +82,7 @@ fun createHttpClient(
                     tokenStorage.saveTokens(
                         newTokens.access_token,
                         newTokens.refresh_token,
+                        newTokens.id_token
                     )
                     BearerTokens(newTokens.access_token, newTokens.refresh_token)
                 }
