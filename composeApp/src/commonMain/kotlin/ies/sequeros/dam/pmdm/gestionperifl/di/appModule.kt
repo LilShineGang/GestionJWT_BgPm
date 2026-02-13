@@ -1,4 +1,5 @@
 package ies.sequeros.dam.pmdm.gestionperifl.di
+import ies.sequeros.dam.pmdm.gestionperifl.ui.main.MainViewModel
 
 import ies.sequeros.dam.pmdm.gestionperifl.application.auth.LoginUseCase
 import ies.sequeros.dam.pmdm.gestionperifl.infraestructure.auth.SettingsTokenStorage
@@ -44,5 +45,6 @@ val appModulo = module {
     single { AppSettings() }
     viewModel { AppViewModel(get()) }
     viewModel { LoginFormViewModel(get()) }
+    viewModel { MainViewModel() }
 
 }
