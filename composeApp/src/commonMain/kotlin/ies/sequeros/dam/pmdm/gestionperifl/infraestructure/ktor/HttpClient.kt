@@ -18,6 +18,7 @@ import io.ktor.client.request.setBody
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
 import io.ktor.http.encodedPath
+import io.ktor.http.isSuccess
 import io.ktor.serialization.kotlinx.json.json
 import kotlinx.serialization.json.Json
 
@@ -25,7 +26,7 @@ fun createHttpClient(
     tokenStorage: TokenStorage,
     refreshUrl: String,
 ): HttpClient {
-    return HttpClient { // Puedes usar HttpClient(CIO), HttpClient(Darwin), etc.
+    return HttpClient {
         install(DefaultRequest) {
             header(HttpHeaders.ContentType, ContentType.Application.Json)
         }
@@ -38,7 +39,7 @@ fun createHttpClient(
                     println("KTOR CLIENT LOG: $message")
                 }
             }
-            level = LogLevel.ALL // O LogLevel.ALL para ver todo
+            level = LogLevel.ALL
         }
         install(ContentNegotiation) {
             json(Json {
@@ -50,7 +51,9 @@ fun createHttpClient(
         install(Auth) {
             bearer {
                 sendWithoutRequest { request ->
-                    request.url.encodedPath.startsWith("/api/users/")
+                    val path = request.url.encodedPath
+                    val refreshPath = io.ktor.http.Url(refreshUrl).encodedPath
+                    path.startsWith("/api/") && !path.startsWith("/api/public/") && path != refreshPath
                 }
                 loadTokens {
                     val accessToken = tokenStorage.getAccessToken()
@@ -66,25 +69,44 @@ fun createHttpClient(
                 refreshTokens {
                     val refreshToken = tokenStorage.getRefreshToken()
                     if (refreshToken.isNullOrBlank()) {
+                        println("KTOR CLIENT LOG: refresh skipped (no refresh token)")
                         return@refreshTokens null
                     }
 
-                    val newTokens = try {
+                    val response = try {
+                        println("KTOR CLIENT LOG: attempting token refresh")
                         client.post(refreshUrl) {
                             markAsRefreshTokenRequest()
-                            setBody(RefreshRequest(refreshToken))
-                        }.body<AuthTokensResponse>()
+                            setBody(mapOf("refresh_token" to refreshToken))
+                        }
                     } catch (ex: Exception) {
+                        println("KTOR CLIENT LOG: token refresh failed: ${ex.message}")
                         tokenStorage.clear()
                         return@refreshTokens null
                     }
 
+                    if (!response.status.isSuccess()) {
+                        println("KTOR CLIENT LOG: token refresh rejected: ${response.status}")
+                        return@refreshTokens null
+                    }
+
+                    val data = response.body<Map<String, String>>()
+                    val newAccess = data["access_token"].orEmpty()
+                    val newRefresh = data["refresh_token"] ?: refreshToken
+                    val idToken = data["id_token"]
+
+                    if (newAccess.isBlank()) {
+                        println("KTOR CLIENT LOG: token refresh missing access_token")
+                        return@refreshTokens null
+                    }
+
                     tokenStorage.saveTokens(
-                        newTokens.access_token,
-                        newTokens.refresh_token,
-                        newTokens.id_token
+                        newAccess,
+                        newRefresh,
+                        idToken
                     )
-                    BearerTokens(newTokens.access_token, newTokens.refresh_token)
+                    println("KTOR CLIENT LOG: token refresh succeeded")
+                    BearerTokens(newAccess, newRefresh)
                 }
             }
         }
