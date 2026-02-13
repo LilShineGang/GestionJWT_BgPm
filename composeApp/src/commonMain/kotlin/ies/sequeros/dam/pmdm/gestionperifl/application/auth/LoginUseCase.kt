@@ -10,7 +10,7 @@ class LoginUseCase(
     suspend operator fun invoke(email: String, password: String): Result<Unit> {
         return runCatching {
             val tokens = authApi.login(email, password)
-            tokenStorage.saveTokens(tokens.access_token, tokens.refresh_token)
+            tokenStorage.saveTokens(tokens.access_token, tokens.refresh_token, tokens.id_token)
         }
     }
 }
