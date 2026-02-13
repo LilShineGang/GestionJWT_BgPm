@@ -1,5 +1,6 @@
 package ies.sequeros.dam.pmdm.gestionperifl.ui.components.login
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -96,9 +97,8 @@ fun LoginComponent (state: LoginState,
             } else {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp) // Espacio entre botones
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
                 ) {
-                    // Botón de Cancelar (Secundario)
                     OutlinedButton(
                         onClick = onCancel,
                         modifier = Modifier.weight(1f),
@@ -106,13 +106,9 @@ fun LoginComponent (state: LoginState,
                     ) {
                         Text("Cancelar")
                     }
-
-                    // Botón de Login (Primario)
                     Button(
                         onClick = {
                             onLoginClick()
-                            //viewModel.login()
-
                         },
                         modifier = Modifier.weight(1f),
                         enabled = state.isValid && !state.isLoading,
@@ -120,17 +116,16 @@ fun LoginComponent (state: LoginState,
                     ) {
                         Text("Entrar")
                     }
-                    if (state.errorMessage != null) {
-                        Text(
-                            text = state.errorMessage,
-                            color = MaterialTheme.colorScheme.error,
-                            style = MaterialTheme.typography.bodySmall,
-                            modifier = Modifier
-                                .padding(bottom = 8.dp)
-                                .fillMaxWidth()
-                        )
-                    }
                 }
+                Spacer(modifier = Modifier.height(16.dp))
+                androidx.compose.material3.Text(
+                    text = "Ir a registro",
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .clickable { /* Debes pasar onRegister como parámetro */ }
+                )
             }
         }
     }
