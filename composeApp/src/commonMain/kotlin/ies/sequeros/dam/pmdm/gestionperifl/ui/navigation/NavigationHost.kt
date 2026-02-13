@@ -9,27 +9,47 @@ import org.koin.compose.viewmodel.koinViewModel
 import ies.sequeros.dam.pmdm.gestionperifl.infraestructure.auth.TokenStorage
 import org.koin.compose.koinInject
 import ies.sequeros.dam.pmdm.gestionperifl.infraestructure.TokenJwt
+import ies.sequeros.dam.pmdm.gestionperifl.infraestructure.ktor.AuthApi
 enum class Screen { LOGIN, REGISTER, MAIN }
 
 @Composable
 fun NavigationHost() {
     val tokenStorage: TokenStorage = koinInject()
+    val authApi: AuthApi = koinInject()
     var currentScreen by rememberSaveable { mutableStateOf<Screen?>(null) }
     var didAutoLogin by rememberSaveable { mutableStateOf(false) }
 
     // Autologin: solo al iniciar la app
     LaunchedEffect(Unit) {
         if (!didAutoLogin) {
-            val token = tokenStorage.getAccessToken()
-            currentScreen = if (token != null) {
+            val accessToken = tokenStorage.getAccessToken()
+            val refreshToken = tokenStorage.getRefreshToken()
+
+            val isAccessValid = accessToken?.let {
                 try {
-                    val jwt = TokenJwt(token)
-                    if (jwt.isSessionValid()) Screen.MAIN else Screen.LOGIN
+                    TokenJwt(it).isSessionValid()
                 } catch (_: Exception) {
-                    Screen.LOGIN
+                    false
                 }
-            } else {
-                Screen.LOGIN
+            } ?: false
+
+            currentScreen = when {
+                isAccessValid -> Screen.MAIN
+                !refreshToken.isNullOrBlank() -> {
+                    try {
+                        val tokens = authApi.refresh(refreshToken)
+                        tokenStorage.saveTokens(
+                            tokens.access_token,
+                            tokens.refresh_token,
+                            tokens.id_token
+                        )
+                        Screen.MAIN
+                    } catch (_: Exception) {
+                        tokenStorage.clear()
+                        Screen.LOGIN
+                    }
+                }
+                else -> Screen.LOGIN
             }
             didAutoLogin = true
         }
