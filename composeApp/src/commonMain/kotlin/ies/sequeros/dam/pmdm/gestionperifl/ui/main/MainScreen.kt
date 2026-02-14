@@ -20,7 +20,6 @@ import androidx.navigation.compose.rememberNavController
 import ies.sequeros.dam.pmdm.gestionperifl.ui.verusuario.VerUsuarioScreen
 import ies.sequeros.dam.pmdm.gestionperifl.ui.modificarusuario.ModificarUsuarioScreen
 import ies.sequeros.dam.pmdm.gestionperifl.ui.borrarusuario.BorrarUsuarioScreen
-import ies.sequeros.dam.pmdm.gestionperifl.ui.borrarusuario.rememberBorrarUsuarioViewModel
 import org.koin.compose.koinInject
 import ies.sequeros.dam.pmdm.gestionperifl.ui.modificarcontrasena.ModificarContrasenaScreen
 import ies.sequeros.dam.pmdm.gestionperifl.ui.modificarimagen.ModificarImagenScreen
@@ -142,10 +141,11 @@ fun MainScreen(viewModel: MainViewModel, onLogout: () -> Unit) {
                 composable(Destino.ModificarUsuario.ruta) { ModificarUsuarioScreen() }
                 composable(Destino.BorrarUsuario.ruta) {
                     val api = koinInject<ies.sequeros.dam.pmdm.gestionperifl.infraestructure.ktor.AuthApi>()
-                    val viewModel = rememberBorrarUsuarioViewModel(api)
-                    BorrarUsuarioScreen(viewModel = viewModel, onLogout = onLogout)
+                    BorrarUsuarioScreen(api = api, onLogout = onLogout)
                 }
-                composable(Destino.ModificarContrasena.ruta) { ModificarContrasenaScreen() }
+                composable(Destino.ModificarContrasena.ruta) {
+                    ModificarContrasenaScreen(onLogout = onLogout)
+                }
                 composable(Destino.ModificarImagen.ruta) { ModificarImagenScreen() }
             }
         }

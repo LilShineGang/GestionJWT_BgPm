@@ -5,7 +5,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -13,7 +12,12 @@ import org.koin.compose.koinInject
 import ies.sequeros.dam.pmdm.gestionperifl.infraestructure.auth.TokenStorage
 
 @Composable
-fun BorrarUsuarioScreen(viewModel: BorrarUsuarioViewModel, onLogout: (() -> Unit)? = null) {
+fun BorrarUsuarioScreen(
+    api: ies.sequeros.dam.pmdm.gestionperifl.infraestructure.ktor.AuthApi,
+    onLogout: (() -> Unit)? = null
+) {
+    val useCase = remember { ies.sequeros.dam.pmdm.gestionperifl.application.user.deleteuser.DeleteUserUseCase(api) }
+    val viewModel = remember { ies.sequeros.dam.pmdm.gestionperifl.ui.borrarusuario.BorrarUsuarioViewModel(useCase) }
     var password by remember { mutableStateOf("") }
     val tokenStorage: TokenStorage = koinInject()
 
