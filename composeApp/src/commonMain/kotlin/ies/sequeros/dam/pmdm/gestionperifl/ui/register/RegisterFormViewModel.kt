@@ -5,13 +5,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import ies.sequeros.dam.pmdm.gestionperifl.application.auth.RegisterUseCase
 
 import ies.sequeros.dam.pmdm.gestionperifl.infraestructure.ktor.AuthApi
 import ies.sequeros.dam.pmdm.gestionperifl.infraestructure.ktor.RegisterRequest
 import kotlinx.coroutines.launch
 
 class RegisterFormViewModel(
-    private val api: AuthApi
+    private val registerUseCase: RegisterUseCase
 ) : ViewModel() {
 
     // inputs
@@ -52,7 +53,7 @@ class RegisterFormViewModel(
                     password = password
                 )
 
-                val success = api.register(request)
+                val success = registerUseCase.execute(request)
 
                 if (success) {
                     print("Registro Correcto")

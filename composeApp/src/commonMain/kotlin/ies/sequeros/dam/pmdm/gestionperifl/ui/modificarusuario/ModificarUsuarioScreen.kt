@@ -17,3 +17,13 @@ fun ModificarUsuarioScreen() {
         Text("Modificar Usuario", style = MaterialTheme.typography.headlineMedium)
     }
 }
+
+/*
+
+Para el activo o inactivo de verUsuario
+
+@Serializable
+data class UpdateUserRequest(val name: String, val status: String)
+
+
+* */
