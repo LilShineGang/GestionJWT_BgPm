@@ -1,5 +1,9 @@
 package ies.sequeros.dam.pmdm.gestionperifl.ui.main
 
+import androidx.compose.foundation.background
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Delete
@@ -43,13 +47,30 @@ fun MainScreen(viewModel: MainViewModel, onLogout: () -> Unit) {
     val navController = rememberNavController()
 
     Row(Modifier.fillMaxSize()) {
-        // Sidebar
+        // --- Sidebar ---
         Column(
-            Modifier.width(180.dp).fillMaxHeight().padding(8.dp),
+            Modifier
+                .width(180.dp)
+                .fillMaxHeight()
+                .background(MaterialTheme.colorScheme.surfaceVariant)
+                .padding(12.dp),
             horizontalAlignment = Alignment.Start
         ) {
-            Text("Menu", style = MaterialTheme.typography.titleMedium)
-            Spacer(Modifier.height(16.dp))
+
+            Text(
+                text = "MENU",
+                style = MaterialTheme.typography.titleLarge,
+                fontWeight = FontWeight.Bold,
+                color = MaterialTheme.colorScheme.primary,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            HorizontalDivider(
+                color = Color.LightGray,
+                thickness = 1.dp,
+                modifier = Modifier.padding(vertical = 12.dp)
+            )
 
             // Home
             Button(
@@ -124,10 +145,15 @@ fun MainScreen(viewModel: MainViewModel, onLogout: () -> Unit) {
 
             Spacer(Modifier.weight(1f))
 
-            Button(onClick = onLogout, shape = MaterialTheme.shapes.medium) { Text("Cerrar sesion") }
+            Button(
+                onClick = onLogout,
+                shape = MaterialTheme.shapes.medium,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("Cerrar sesion")
+            }
         }
 
-        // Contenido principal
         Column(
             Modifier.fillMaxSize().padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally

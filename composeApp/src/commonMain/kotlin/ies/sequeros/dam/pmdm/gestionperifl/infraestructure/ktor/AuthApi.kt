@@ -1,9 +1,9 @@
 package ies.sequeros.dam.pmdm.gestionperifl.infraestructure.ktor
 
-import ies.sequeros.dam.pmdm.gestionperifl.infraestructure.ktor.comand.ChangePasswordCommand
 import ies.sequeros.dam.pmdm.gestionperifl.infraestructure.ktor.comand.DeleteCommand
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
+import io.ktor.client.request.get
 import io.ktor.client.request.delete
 import io.ktor.client.request.post
 import io.ktor.client.request.put
@@ -58,6 +58,23 @@ class AuthApi(
             println("Error al registrar usuario: ${e.message}")
             e.printStackTrace()
             return false
+        }
+    }
+
+    // Función para traernos el perfil del tirón
+    suspend fun getMyProfile(): ProfileResponse? {
+        return try {
+            val response = client.get("$baseUrl/api/users/me")
+
+            if (response.status.isSuccess()) {
+                response.body() // Lo parsea al DTO
+            } else {
+                println("Fallo al pedir el perfil. Código: ${response.status}")
+                null
+            }
+        } catch (e: Exception) {
+            println("Peto el getMyProfile: ${e.message}")
+            null
         }
     }
 

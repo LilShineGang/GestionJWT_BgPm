@@ -2,6 +2,8 @@ package ies.sequeros.dam.pmdm.gestionperifl.di
 import ies.sequeros.dam.pmdm.gestionperifl.ui.main.MainViewModel
 
 import ies.sequeros.dam.pmdm.gestionperifl.application.auth.LoginUseCase
+import ies.sequeros.dam.pmdm.gestionperifl.application.auth.RegisterUseCase
+import ies.sequeros.dam.pmdm.gestionperifl.application.auth.VerUsuarioUseCase
 import ies.sequeros.dam.pmdm.gestionperifl.infraestructure.auth.SettingsTokenStorage
 import ies.sequeros.dam.pmdm.gestionperifl.infraestructure.auth.TokenStorage
 import ies.sequeros.dam.pmdm.gestionperifl.infraestructure.ktor.AuthApi
@@ -10,6 +12,7 @@ import ies.sequeros.dam.pmdm.gestionperifl.ui.appsettings.AppSettings
 import ies.sequeros.dam.pmdm.gestionperifl.ui.appsettings.AppViewModel
 import ies.sequeros.dam.pmdm.gestionperifl.ui.login.LoginFormViewModel
 import ies.sequeros.dam.pmdm.gestionperifl.ui.register.RegisterFormViewModel
+import ies.sequeros.dam.pmdm.gestionperifl.ui.verusuario.VerUsuarioViewModel
 import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
@@ -31,6 +34,9 @@ val appModulo = module {
     }
     single { AuthApi(get(), baseUrl) }
     single { LoginUseCase(get(), get()) }
+    single { RegisterUseCase(get()) }
+    single { VerUsuarioUseCase(get()) }
+
     //almacenamiento del token
     //repositorios
     /**
@@ -48,4 +54,5 @@ val appModulo = module {
     viewModel { LoginFormViewModel(get()) }
     viewModel { MainViewModel() }
     viewModel { RegisterFormViewModel(get()) }
+    viewModel { VerUsuarioViewModel(get()) }
 }

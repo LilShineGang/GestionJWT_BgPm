@@ -28,3 +28,12 @@ data class RegisterRequest(
     val password: String
 )
 
+// para pillar datos del perfil
+@Serializable
+data class ProfileResponse(
+    val id: String,
+    val name: String? = null,
+    val email: String,
+    val image: String? = null,
+    val status: String
+)
