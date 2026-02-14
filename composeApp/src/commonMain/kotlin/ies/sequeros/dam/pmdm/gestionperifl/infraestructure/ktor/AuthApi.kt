@@ -14,6 +14,7 @@ import io.ktor.client.utils.EmptyContent.contentType
 
 import io.ktor.http.ContentType
 import io.ktor.http.contentType
+import io.ktor.http.headers
 
 import io.ktor.http.isSuccess
 
@@ -132,6 +133,19 @@ class AuthApi(
             println("Error al borrar usuario: ${e.message}")
             e.printStackTrace()
             return false
+        }
+    }
+
+    suspend fun updateUserProfile(request: UpdateUserRequest): Boolean {
+        return try {
+            val response = client.patch("$baseUrl/api/users/me") {
+                headers { append("Content-Type", "application/json") }
+                setBody(request)
+            }
+            response.status.isSuccess()
+        } catch (e: Exception) {
+            println("Error al modificar usuario: ${e.message}")
+            false
         }
     }
 }
