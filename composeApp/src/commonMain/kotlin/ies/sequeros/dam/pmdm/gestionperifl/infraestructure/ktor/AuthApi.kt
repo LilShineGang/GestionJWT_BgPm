@@ -5,6 +5,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import io.ktor.client.request.delete
+import io.ktor.client.request.patch
 import io.ktor.client.request.post
 import io.ktor.client.request.put
 import io.ktor.client.request.setBody
@@ -20,6 +21,35 @@ class AuthApi(
     private val client: HttpClient,
     private val baseUrl: String,
 ) {
+    suspend fun changeProfileImage(imageBytes: ByteArray, fileName: String = "profile.jpg"): ProfileResponse? {
+        return try {
+            val response = client.patch("$baseUrl/api/users/me/image") {
+                setBody(
+                    io.ktor.client.request.forms.MultiPartFormDataContent(
+                        io.ktor.client.request.forms.formData {
+                            append(
+                                key = "image",
+                                value = imageBytes,
+                                headers = io.ktor.http.headersOf(
+                                    io.ktor.http.HttpHeaders.ContentDisposition,
+                                    "form-data; name=\"image\"; filename=\"$fileName\""
+                                )
+                            )
+                        }
+                    )
+                )
+            }
+            if (response.status.isSuccess()) {
+                response.body()
+            } else {
+                println("Fallo al cambiar imagen. Código: ${response.status}")
+                null
+            }
+        } catch (e: Exception) {
+            println("Error al cambiar imagen: ${e.message}")
+            null
+        }
+    }
     suspend fun changePassword(command: ChangePasswordCommand): Boolean {
         try {
             val response = client.put("$baseUrl/api/users/me/password") {

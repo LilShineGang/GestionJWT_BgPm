@@ -1,6 +1,7 @@
 package ies.sequeros.dam.pmdm.gestionperifl.di
 import ies.sequeros.dam.pmdm.gestionperifl.ui.main.MainViewModel
-
+import ies.sequeros.dam.pmdm.gestionperifl.application.user.changeimage.ChangeImageUseCase
+import ies.sequeros.dam.pmdm.gestionperifl.ui.modificarimagen.ModificarImagenViewModel
 import ies.sequeros.dam.pmdm.gestionperifl.application.auth.LoginUseCase
 import ies.sequeros.dam.pmdm.gestionperifl.application.auth.RegisterUseCase
 import ies.sequeros.dam.pmdm.gestionperifl.application.auth.VerUsuarioUseCase
@@ -32,6 +33,7 @@ val appModulo = module {
             "$baseUrl/api/public/refresh"
         )
     }
+    single { ChangeImageUseCase(get()) }
     single { AuthApi(get(), baseUrl) }
     single { LoginUseCase(get(), get()) }
     single { RegisterUseCase(get()) }
@@ -55,4 +57,5 @@ val appModulo = module {
     viewModel { MainViewModel() }
     viewModel { RegisterFormViewModel(get()) }
     viewModel { VerUsuarioViewModel(get()) }
+    viewModel { ModificarImagenViewModel(get()) }
 }

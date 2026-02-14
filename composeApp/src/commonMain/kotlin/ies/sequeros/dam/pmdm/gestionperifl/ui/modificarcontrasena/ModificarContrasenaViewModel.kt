@@ -4,7 +4,7 @@ import androidx.compose.runtime.*
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import ies.sequeros.dam.pmdm.gestionperifl.application.user.changepassword.ChangePasswordUseCase
-import ies.sequeros.dam.pmdm.gestionperifl.infraestructure.ktor.comand.ChangePasswordCommand
+import ies.sequeros.dam.pmdm.gestionperifl.infraestructure.ktor.ChangePasswordCommand
 import kotlinx.coroutines.launch
 
 class ModificarContrasenaViewModel(private val useCase: ChangePasswordUseCase) : ViewModel() {
