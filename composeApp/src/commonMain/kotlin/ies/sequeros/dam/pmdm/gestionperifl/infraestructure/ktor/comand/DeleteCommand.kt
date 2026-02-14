@@ -1,4 +1,4 @@
-package ies.sequeros.dam.pmdm.gestionperifl.infraestructure.ktor
+package ies.sequeros.dam.pmdm.gestionperifl.infraestructure.ktor.comand
 
 import kotlinx.serialization.Serializable
 
