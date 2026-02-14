@@ -37,3 +37,9 @@ data class ProfileResponse(
     val image: String? = null,
     val status: String
 )
+
+@Serializable
+data class UpdateUserRequest(
+    val name: String,
+    val status: String
+)
